@@ -47,7 +47,7 @@ jobs:
         cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
         cmake --build . --target=format
         cmake --build .
-        cmake --install . --prefix ./installsh build.sh
+        cmake --install . --prefix ./install
         
         # rm -r ${{github.workspace}}/build
         # mkdir ${{github.workspace}}/build
