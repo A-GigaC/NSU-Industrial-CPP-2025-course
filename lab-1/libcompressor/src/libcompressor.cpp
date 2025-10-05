@@ -28,7 +28,7 @@ buffer compress(compressionAlgorithm algo, buffer input) {
 
   compressedData.data = (char*)malloc(input.size + 1024);
 
-  switch (alg) {
+  switch (algo) {
     case zlib: {
       z_stream data;
       data.zalloc = Z_NULL;
@@ -52,7 +52,7 @@ buffer compress(compressionAlgorithm algo, buffer input) {
         deflateEnd(&data);
         compressedData.size = 0;
         free(compressedData.data);
-        comressedData.data = NULL;
+        compressedData.data = NULL;
         return compressedData;
       }
       compressedData.size = data.total_out;
@@ -64,7 +64,7 @@ buffer compress(compressionAlgorithm algo, buffer input) {
                                    0, 0) != BZ_OK) {
         compressedData.size = 0;
         free(compressedData.data);
-        comressedData.data = NULL;
+        compressedData.data = NULL;
       }
     } break;
     default:
