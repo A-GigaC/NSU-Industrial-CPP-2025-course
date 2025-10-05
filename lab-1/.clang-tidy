@@ -13,7 +13,6 @@ ImplementationFileExtensions:
   - cpp
   - cxx
 HeaderFilterRegex: ''
-ExcludeHeaderFilterRegex: ''
 FormatStyle:     none
 User:            artyom
 CheckOptions:
@@ -32,3 +31,4 @@ CheckOptions:
   llvm-qualified-auto.AddConstToQualified: 'false'
 SystemHeaders:   false
 ...
+
