@@ -2,31 +2,32 @@
 #include <stdexcept>
 
 using namespace regex;
+using namespace std;
 
 // CharNode implementation
 CharNode::CharNode(char c) : m_char(c) {}
 
-std::pair<bool, size_t> CharNode::match(const std::string& str, size_t pos) const {
+pair<bool, size_t> CharNode::match(const string& str, size_t pos) const {
     if (pos < str.length() && str[pos] == m_char) {
         return {true, pos + 1};
     }
     return {false, pos};
 }
 
-std::unique_ptr<ASTNode> CharNode::clone() const {
-    return std::make_unique<CharNode>(m_char);
+unique_ptr<ASTNode> CharNode::clone() const {
+    return make_unique<CharNode>(m_char);
 }
 
 // AnyCharNode implementation
-std::pair<bool, size_t> AnyCharNode::match(const std::string& str, size_t pos) const {
+pair<bool, size_t> AnyCharNode::match(const string& str, size_t pos) const {
     if (pos < str.length()) {
         return {true, pos + 1};
     }
     return {false, pos};
 }
 
-std::unique_ptr<ASTNode> AnyCharNode::clone() const {
-    return std::make_unique<AnyCharNode>();
+unique_ptr<ASTNode> AnyCharNode::clone() const {
+    return make_unique<AnyCharNode>();
 }
 
 // GroupNode implementation
@@ -40,15 +41,15 @@ void GroupNode::addRange(char from, char to) {
     }
 }
 
-std::pair<bool, size_t> GroupNode::match(const std::string& str, size_t pos) const {
+pair<bool, size_t> GroupNode::match(const string& str, size_t pos) const {
     if (pos < str.length() && m_chars.find(str[pos]) != m_chars.end()) {
         return {true, pos + 1};
     }
     return {false, pos};
 }
 
-std::unique_ptr<ASTNode> GroupNode::clone() const {
-    auto node = std::make_unique<GroupNode>();
+unique_ptr<ASTNode> GroupNode::clone() const {
+    auto node = make_unique<GroupNode>();
     for (char c : m_chars) {
         node->addChar(c);
     }
@@ -56,10 +57,10 @@ std::unique_ptr<ASTNode> GroupNode::clone() const {
 }
 
 // ModifierNode implementation
-ModifierNode::ModifierNode(std::unique_ptr<ASTNode> child, char modifier) 
-    : m_child(std::move(child)), m_modifier(modifier) {}
+ModifierNode::ModifierNode(unique_ptr<ASTNode> child, char modifier) 
+    : m_child(move(child)), m_modifier(modifier) {}
 
-std::pair<bool, size_t> ModifierNode::match(const std::string& str, size_t pos) const {
+pair<bool, size_t> ModifierNode::match(const string& str, size_t pos) const {
     switch (m_modifier) {
         case '*': { // 0 или более раз (жадный)
             size_t max_pos = pos;
@@ -112,20 +113,20 @@ std::pair<bool, size_t> ModifierNode::match(const std::string& str, size_t pos) 
         }
         
         default:
-            throw std::runtime_error("Unknown modifier");
+            throw runtime_error("Unknown modifier");
     }
 }
 
-std::unique_ptr<ASTNode> ModifierNode::clone() const {
-    return std::make_unique<ModifierNode>(m_child->clone(), m_modifier);
+unique_ptr<ASTNode> ModifierNode::clone() const {
+    return make_unique<ModifierNode>(m_child->clone(), m_modifier);
 }
 
 // SequenceNode implementation
-void SequenceNode::addNode(std::unique_ptr<ASTNode> node) {
-    m_children.push_back(std::move(node));
+void SequenceNode::addNode(unique_ptr<ASTNode> node) {
+    m_children.push_back(move(node));
 }
 
-std::pair<bool, size_t> SequenceNode::match(const std::string& str, size_t pos) const {
+pair<bool, size_t> SequenceNode::match(const string& str, size_t pos) const {
     size_t current_pos = pos;
     
     for (const auto& child : m_children) {
@@ -139,8 +140,8 @@ std::pair<bool, size_t> SequenceNode::match(const std::string& str, size_t pos) 
     return {true, current_pos};
 }
 
-std::unique_ptr<ASTNode> SequenceNode::clone() const {
-    auto node = std::make_unique<SequenceNode>();
+unique_ptr<ASTNode> SequenceNode::clone() const {
+    auto node = make_unique<SequenceNode>();
     for (const auto& child : m_children) {
         node->addNode(child->clone());
     }

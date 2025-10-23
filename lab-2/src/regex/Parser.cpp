@@ -3,32 +3,33 @@
 #include <stdexcept>
 
 using namespace regex;
+using namespace std;
 
-Parser::Parser(const std::string& input) 
+Parser::Parser(const string& input) 
     : m_lexer(input), m_currentToken(m_lexer.nextToken()) {}
 
 void Parser::advance() {
     m_currentToken = m_lexer.nextToken();
 }
 
-std::unique_ptr<ASTNode> Parser::parse() {
+unique_ptr<ASTNode> Parser::parse() {
     return parseExpression();
 }
 
-std::unique_ptr<ASTNode> Parser::parseExpression() {
-    auto sequence = std::make_unique<SequenceNode>();
+unique_ptr<ASTNode> Parser::parseExpression() {
+    auto sequence = make_unique<SequenceNode>();
     
     while (m_currentToken.type != TokenType::END) {
         auto element = parseElement();
         if (element) {
-            sequence->addNode(std::move(element));
+            sequence->addNode(move(element));
         }
     }
     
     return sequence;
 }
 
-std::unique_ptr<ASTNode> Parser::parseElement() {
+unique_ptr<ASTNode> Parser::parseElement() {
     auto node = parseBaseElement();
     
     // Проверяем модификаторы
@@ -45,22 +46,22 @@ std::unique_ptr<ASTNode> Parser::parseElement() {
         }
         
         advance(); // consume modifier
-        return std::make_unique<ModifierNode>(std::move(node), modifier);
+        return make_unique<ModifierNode>(move(node), modifier);
     }
     
     return node;
 }
 
-std::unique_ptr<ASTNode> Parser::parseBaseElement() {
+unique_ptr<ASTNode> Parser::parseBaseElement() {
     switch (m_currentToken.type) {
         case TokenType::CHAR: {
-            auto node = std::make_unique<CharNode>(m_currentToken.value);
+            auto node = make_unique<CharNode>(m_currentToken.value);
             advance();
             return node;
         }
         
         case TokenType::DOT: {
-            auto node = std::make_unique<AnyCharNode>();
+            auto node = make_unique<AnyCharNode>();
             advance();
             return node;
         }
@@ -70,25 +71,25 @@ std::unique_ptr<ASTNode> Parser::parseBaseElement() {
         }
         
         default:
-            throw std::runtime_error("Unexpected token");
+            throw runtime_error("Unexpected token");
     }
 }
 
-std::unique_ptr<ASTNode> Parser::parseGroup() {
+unique_ptr<ASTNode> Parser::parseGroup() {
     advance(); // consume '['
     
-    auto group = std::make_unique<GroupNode>();
+    auto group = make_unique<GroupNode>();
     bool in_range = false;
     char range_start = '\0';
     
     while (m_currentToken.type != TokenType::GROUP_CLOSE) {
         if (m_currentToken.type == TokenType::END) {
-            throw std::runtime_error("Unclosed group");
+            throw runtime_error("Unclosed group");
         }
         
         if (m_currentToken.type == TokenType::HYPHEN) {
             if (in_range) {
-                throw std::runtime_error("Invalid range in group");
+                throw runtime_error("Invalid range in group");
             }
             in_range = true;
             advance();
@@ -98,7 +99,7 @@ std::unique_ptr<ASTNode> Parser::parseGroup() {
         if (m_currentToken.type == TokenType::CHAR) {
             if (in_range) {
                 if (range_start == '\0') {
-                    throw std::runtime_error("Invalid range in group");
+                    throw runtime_error("Invalid range in group");
                 }
                 group->addRange(range_start, m_currentToken.value);
                 in_range = false;
@@ -109,7 +110,7 @@ std::unique_ptr<ASTNode> Parser::parseGroup() {
             }
             advance();
         } else {
-            throw std::runtime_error("Invalid character in group");
+            throw runtime_error("Invalid character in group");
         }
     }
     

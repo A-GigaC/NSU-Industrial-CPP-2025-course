@@ -3,6 +3,9 @@
 #include <memory>
 #include "AST.h"
 
+using namespace std;
+
+
 namespace regex {
 
 /**
@@ -10,17 +13,17 @@ namespace regex {
  */
 class Matcher {
 private:
-    std::unique_ptr<ASTNode> m_pattern;
+    unique_ptr<ASTNode> m_pattern;
     
 public:
-    explicit Matcher(std::unique_ptr<ASTNode> pattern);
+    explicit Matcher(unique_ptr<ASTNode> pattern);
     
     /**
      * @brief Сопоставляет строку с регулярным выражением
      * @param str Строка для сопоставления
      * @return true если строка соответствует регулярному выражению, иначе false
      */
-    bool match(const std::string& str) const;
+    bool match(const string& str) const;
 };
 
 } // namespace regex

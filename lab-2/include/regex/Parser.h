@@ -4,6 +4,8 @@
 #include "Lexer.h"
 #include "AST.h"
 
+using namespace std;
+
 namespace regex {
 
 /**
@@ -23,35 +25,35 @@ private:
      * @brief Парсит выражение (последовательность)
      * @return Узел последовательности
      */
-    std::unique_ptr<ASTNode> parseExpression();
+    unique_ptr<ASTNode> parseExpression();
     
     /**
      * @brief Парсит элемент с возможными модификаторами
      * @return Узел элемента
      */
-    std::unique_ptr<ASTNode> parseElement();
+    unique_ptr<ASTNode> parseElement();
     
     /**
      * @brief Парсит базовый элемент (без модификаторов)
      * @return Узел базового элемента
      */
-    std::unique_ptr<ASTNode> parseBaseElement();
+    unique_ptr<ASTNode> parseBaseElement();
     
     /**
      * @brief Парсит группу символов ([abc])
      * @return Узел группы
      */
-    std::unique_ptr<ASTNode> parseGroup();
+    unique_ptr<ASTNode> parseGroup();
     
 public:
-    explicit Parser(const std::string& input);
+    explicit Parser(const string& input);
     
     /**
      * @brief Парсит регулярное выражение
      * @return Корневой узел AST
-     * @throws std::runtime_error при синтаксической ошибке
+     * @throws runtime_error при синтаксической ошибке
      */
-    std::unique_ptr<ASTNode> parse();
+    unique_ptr<ASTNode> parse();
 };
 
 } // namespace regex

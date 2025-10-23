@@ -4,6 +4,10 @@
 #include "regex/Parser.h"
 #include "regex/Matcher.h"
 
+using namespace regex;
+using namespace std;
+
+
 /**
  * @brief Главная функция приложения
  * @return Код завершения
@@ -11,25 +15,25 @@
 int main() {
     try {
         // Читаем регулярное выражение из stdin
-        std::string regex_pattern;
-        std::getline(std::cin, regex_pattern);
+        string regex_pattern;
+        getline(cin, regex_pattern);
         
         // Парсим регулярное выражение
-        regex::Parser parser(regex_pattern);
+        Parser parser(regex_pattern);
         auto ast = parser.parse();
         
-        // Создаем сопоставитель
-        regex::Matcher matcher(std::move(ast));
+        // Создаем мэтчер
+        Matcher matcher(move(ast));
         
         // Обрабатываем строки из stdin
-        std::string line;
-        while (std::getline(std::cin, line)) {
+        string line;
+        while (getline(cin, line)) {
             bool result = matcher.match(line);
-            std::cout << (result ? "true" : "false") << std::endl;
+            cout << (result ? "true" : "false") << endl;
         }
         
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+    } catch (const exception& e) {
+        cerr << "Error: " << e.what() << endl;
         return 1;
     }
     

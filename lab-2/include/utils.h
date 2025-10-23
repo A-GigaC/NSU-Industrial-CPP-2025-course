@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 namespace utils {
     /**
      * @brief Разделяет строку на подстроки по разделителю
@@ -10,7 +12,7 @@ namespace utils {
      * @param delimiter Разделитель
      * @return Вектор подстрок
      */
-    std::vector<std::string> split(const std::string& str, char delimiter);
+    vector<string> split(const string& str, char delimiter);
     
     /**
      * @brief Проверяет, находится ли символ в диапазоне

@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 namespace regex {
 
 /**
@@ -35,11 +37,11 @@ struct Token {
  */
 class Lexer {
 private:
-    std::string m_input;
+    string m_input;
     size_t m_position;
     
 public:
-    explicit Lexer(const std::string& input);
+    explicit Lexer(const string& input);
     
     /**
      * @brief Получает следующий токен

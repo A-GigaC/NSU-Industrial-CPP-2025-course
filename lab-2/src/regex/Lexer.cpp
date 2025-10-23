@@ -1,10 +1,11 @@
 #include "regex/Lexer.h"
 
 using namespace regex;
+using namespace std;
 
 Token::Token(TokenType t, char v) : type(t), value(v) {}
 
-Lexer::Lexer(const std::string& input) 
+Lexer::Lexer(const string& input) 
     : m_input(input), m_position(0) {}
 
 Token Lexer::nextToken() {
